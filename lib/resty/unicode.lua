@@ -97,13 +97,18 @@ local function unicode_to_utf8(srcstr)
                 tb_result[#tb_result + 1] = str_char(band(unicode, 0x7f))
             elseif unicode >= 0x0080 and unicode <= 0x07ff then
                 -- 110xxxxx 10xxxxxx
-                tb_result[#tb_result + 1] = str_char(bor(0xc0, band(rshift(unicode, 6), 0x1f)))
-                tb_result[#tb_result + 1] = str_char(bor(0x80, band(unicode, 0x3f)))
+                tb_result[#tb_result + 1] = str_char(bor(0xc0, band(rshift(
+                                                     unicode, 6), 0x1f)))
+                tb_result[#tb_result + 1] = str_char(bor(0x80, band(
+                                                     unicode, 0x3f)))
             elseif unicode >= 0x0800 and unicode <= 0xffff then
                 -- 1110xxxx 10xxxxxx 10xxxxxx
-                tb_result[#tb_result + 1] = str_char(bor(0xe0, band(rshift(unicode, 12), 0x0f)))
-                tb_result[#tb_result + 1] = str_char(bor(0x80, band(rshift(unicode, 6), 0x3f)))
-                tb_result[#tb_result + 1] = str_char(bor(0x80, band(unicode, 0x3f)))
+                tb_result[#tb_result + 1] = str_char(bor(0xe0, band(rshift(
+                                                     unicode, 12), 0x0f)))
+                tb_result[#tb_result + 1] = str_char(bor(0x80, band(rshift(
+                                                     unicode, 6), 0x3f)))
+                tb_result[#tb_result + 1] = str_char(bor(0x80, band(unicode,
+                                                     0x3f)))
             end
 
         else
