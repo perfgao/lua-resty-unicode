@@ -87,30 +87,30 @@ local function unicode_to_utf8(srcstr)
             local unicode = tonumber("0x" .. str_sub(srcstr, i + 2, i + 5))
             if not unicode then
                 tb_result[#tb_result + 1] = substr
-                break
+                i = i + 2
+            else
+
+                i = i + 6
+
+                if unicode <= 0x007f then
+                    -- 0xxxxxxx
+                    tb_result[#tb_result + 1] = str_char(band(unicode, 0x7f))
+                elseif unicode >= 0x0080 and unicode <= 0x07ff then
+                    -- 110xxxxx 10xxxxxx
+                    tb_result[#tb_result + 1] = str_char(bor(0xc0, band(rshift(
+                                                         unicode, 6), 0x1f)))
+                    tb_result[#tb_result + 1] = str_char(bor(0x80, band(
+                                                         unicode, 0x3f)))
+                elseif unicode >= 0x0800 and unicode <= 0xffff then
+                    -- 1110xxxx 10xxxxxx 10xxxxxx
+                    tb_result[#tb_result + 1] = str_char(bor(0xe0, band(rshift(
+                                                         unicode, 12), 0x0f)))
+                    tb_result[#tb_result + 1] = str_char(bor(0x80, band(rshift(
+                                                         unicode, 6), 0x3f)))
+                    tb_result[#tb_result + 1] = str_char(bor(0x80, band(unicode,
+                                                         0x3f)))
+                end
             end
-
-            i = i + 6
-
-            if unicode <= 0x007f then
-                -- 0xxxxxxx
-                tb_result[#tb_result + 1] = str_char(band(unicode, 0x7f))
-            elseif unicode >= 0x0080 and unicode <= 0x07ff then
-                -- 110xxxxx 10xxxxxx
-                tb_result[#tb_result + 1] = str_char(bor(0xc0, band(rshift(
-                                                     unicode, 6), 0x1f)))
-                tb_result[#tb_result + 1] = str_char(bor(0x80, band(
-                                                     unicode, 0x3f)))
-            elseif unicode >= 0x0800 and unicode <= 0xffff then
-                -- 1110xxxx 10xxxxxx 10xxxxxx
-                tb_result[#tb_result + 1] = str_char(bor(0xe0, band(rshift(
-                                                     unicode, 12), 0x0f)))
-                tb_result[#tb_result + 1] = str_char(bor(0x80, band(rshift(
-                                                     unicode, 6), 0x3f)))
-                tb_result[#tb_result + 1] = str_char(bor(0x80, band(unicode,
-                                                     0x3f)))
-            end
-
         else
             tb_result[#tb_result + 1] = str_char(numbyte)
             i = i + 1
